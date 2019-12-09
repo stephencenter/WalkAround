@@ -2,7 +2,7 @@
 
 namespace WalkAround
 {
-    public class TileBuilder
+    public static class TileBuilder
     {
         private static readonly Dictionary<char, TileInfo> TileCatalog = new Dictionary<char, TileInfo>()
         {

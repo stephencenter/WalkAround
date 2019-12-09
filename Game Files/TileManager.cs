@@ -9,23 +9,7 @@ using System.Threading.Tasks;
 
 namespace WalkAround
 {
-    public class Tile : GameObject
-    {
-        public bool Traversable;
-        public bool IsRecoveryPoint;
-
-        public Tile(int pos_x, int pos_y, int width, int height, string sprite, bool traversable, ContentManager content)
-        {
-            PosX = pos_x;
-            PosY = pos_y;
-            Width = width;
-            Height = height;
-            Sprite = content.Load<Texture2D>(sprite);
-            Traversable = traversable;
-        }
-    }
-
-    public class TileManager
+    public static class TileManager
     {
         private static readonly List<Tile> tile_list = new List<Tile>();
 
@@ -54,6 +38,17 @@ namespace WalkAround
                 x = 0;
                 y += WalkAround.tile_size;
             }
+        }
+    }
+
+    public class Tile : GameObject
+    {
+        public bool Traversable;
+        public bool IsRecoveryPoint;
+
+        public Tile(int pos_x, int pos_y, int width, int height, string sprite, bool traversable, ContentManager content) : base(pos_x, pos_y, width, height, sprite, content)
+        {
+            Traversable = traversable;
         }
     }
 }

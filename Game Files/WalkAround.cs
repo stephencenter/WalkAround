@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -19,9 +20,6 @@ namespace WalkAround
         public const int tile_size = 32;
         public const int screen_width = 32;
         public const int screen_height = 18;
-
-        public static int camera_x = 0;
-        public static int camera_y = 0;
 
         // Constructor
         public WalkAround()
@@ -48,6 +46,7 @@ namespace WalkAround
         {
             sprite_batch = new SpriteBatch(GraphicsDevice);
             font_batch = new SpriteBatch(GraphicsDevice);
+            EntityManager.CreatePlayer(Content);
             TileManager.CreateGameMap(Content);
         }
 
@@ -67,24 +66,25 @@ namespace WalkAround
 
             if (Logic.IsButtonPressed(Logic.Actions.move_up))
             {
-                camera_y += 4;
+                EntityManager.player.PosY -= 4;
             }
 
             if (Logic.IsButtonPressed(Logic.Actions.move_down))
             {
-                camera_y -= 4;
+                EntityManager.player.PosY += 4;
             }
 
             if (Logic.IsButtonPressed(Logic.Actions.move_left))
             {
-                camera_x += 4;
+                EntityManager.player.PosX -= 4;
             }
 
             if (Logic.IsButtonPressed(Logic.Actions.move_right))
             {
-                camera_x -= 4;
+                EntityManager.player.PosX += 4;
             }
 
+            Camera.UpdateCamera(graphics);
             base.Update(game_time);
         }
 
@@ -92,11 +92,15 @@ namespace WalkAround
         {
             GraphicsDevice.Clear(Color.Black);
             sprite_batch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scaling_factor));
-
+            
             foreach (Tile tile in TileManager.GetTileList())
             {
-                sprite_batch.Draw(tile.Sprite, new Vector2(tile.PosX + camera_x, tile.PosY + camera_y), Color.White);
+                sprite_batch.Draw(tile.Sprite, new Vector2(tile.PosX + Camera.x_offset, tile.PosY + Camera.y_offset), Color.White);
             }
+
+            Player player = EntityManager.player;
+
+            sprite_batch.Draw(player.Sprite, new Vector2(player.PosX + Camera.x_offset, player.PosY + Camera.y_offset), Color.White);
 
             sprite_batch.End();
 
@@ -104,7 +108,7 @@ namespace WalkAround
         }
     }
 
-    public class GameObject
+    public abstract class GameObject
     {
         // The position of the top-left corner in the game-world
         public int PosX;
@@ -116,9 +120,18 @@ namespace WalkAround
 
         // The GameObject's currently-loaded sprite
         public Texture2D Sprite;
+
+        protected GameObject(int pos_x, int pos_y, int width, int height, string sprite, ContentManager content)
+        {
+            PosX = pos_x;
+            PosY = pos_y;
+            Width = width;
+            Height = height;
+            Sprite = content.Load<Texture2D>(sprite);
+        }
     }
 
-    public class Logic
+    public static class Logic
     {
         // List of valid actions, these can have multiple keys assigned to them
         public enum Actions
