@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace WalkAround
@@ -20,7 +19,7 @@ namespace WalkAround
         public const int tile_size = 32;
         public const int screen_width = 32;
         public const int screen_height = 18;
-        public const char ð = 'þ';
+        public static string current_map = "area1";
 
         // Constructor
         public WalkAround()

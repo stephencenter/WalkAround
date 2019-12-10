@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WalkAround
 {
@@ -13,7 +9,7 @@ namespace WalkAround
 
         public static void CreatePlayer(ContentManager content)
         {
-            player = new Player(0, 0, 32, 64, "Sprites/Entities/player", 4, content);
+            player = new Player(32, 32, 32, 64, "Sprites/Entities/player", 4, content);
         }
     }
 

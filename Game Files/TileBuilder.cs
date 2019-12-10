@@ -6,9 +6,11 @@ namespace WalkAround
     {
         private static readonly Dictionary<char, TileInfo> TileCatalog = new Dictionary<char, TileInfo>()
         {
-            { ' ', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/void", false) },
-            { 'x', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/test_tile", true) },
-            { 'Æ', new TileInfo(WalkAround.tile_size/2, WalkAround.tile_size/2, "Sprites/Tiles/test_2", false) }
+            { ' ', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/void", true) },
+            { 'W', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/wall", false) },
+            { 'G', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/grass", true) },
+            { 'C', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/carpet", true) },
+            { 'T', new TileInfo(WalkAround.tile_size/2, WalkAround.tile_size/2, "Sprites/Tiles/test_2", false) }
         };
 
         public static TileInfo GetTileInfo(char symbol)

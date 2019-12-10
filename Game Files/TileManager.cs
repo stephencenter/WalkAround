@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WalkAround
 {
@@ -20,23 +16,34 @@ namespace WalkAround
 
         public static void CreateGameMap(ContentManager content)
         {
-            int x = 0;
-            int y = 0;
 
-            List<string> text_map = File.ReadAllText("text_map.txt").Split('\n').ToList();
+            List<string> files = Directory.GetFiles($"Maps/{WalkAround.current_map}", "*.txt", SearchOption.TopDirectoryOnly).ToList();
+            List<List<string>> layers = new List<List<string>>();
+            layers.Sort();
 
-            foreach (string line in text_map)
+            foreach (string file in files)
             {
-                foreach (char symbol in line.Trim())
+                layers.Add(File.ReadAllText(file).Split('\n').ToList());
+            }
+
+            foreach (List<string> layer in layers)
+            {
+                int x = 0;
+                int y = 0;
+
+                foreach (string line in layer)
                 {
-                    var t_info = TileBuilder.GetTileInfo(symbol);
-                    tile_list.Add(new Tile(x, y, t_info.Width, t_info.Height, t_info.Sprite, t_info.Traversable, content));
+                    foreach (char symbol in line.Trim())
+                    {
+                        var t_info = TileBuilder.GetTileInfo(symbol);
+                        tile_list.Add(new Tile(x, y, t_info.Width, t_info.Height, t_info.Sprite, t_info.Traversable, content));
 
-                    x += WalkAround.tile_size;
+                        x += WalkAround.tile_size;
+                    }
+
+                    x = 0;
+                    y += WalkAround.tile_size;
                 }
-
-                x = 0;
-                y += WalkAround.tile_size;
             }
         }
     }
