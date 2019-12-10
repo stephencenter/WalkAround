@@ -20,6 +20,7 @@ namespace WalkAround
         public const int tile_size = 32;
         public const int screen_width = 32;
         public const int screen_height = 18;
+        public const char ð = 'þ';
 
         // Constructor
         public WalkAround()
@@ -64,26 +65,7 @@ namespace WalkAround
             float sf2 = (float)(graphics.PreferredBackBufferHeight) / (tile_size * screen_height);
             scaling_factor = Math.Min(sf1, sf2);
 
-            if (Logic.IsButtonPressed(Logic.Actions.move_up))
-            {
-                EntityManager.player.PosY -= 4;
-            }
-
-            if (Logic.IsButtonPressed(Logic.Actions.move_down))
-            {
-                EntityManager.player.PosY += 4;
-            }
-
-            if (Logic.IsButtonPressed(Logic.Actions.move_left))
-            {
-                EntityManager.player.PosX -= 4;
-            }
-
-            if (Logic.IsButtonPressed(Logic.Actions.move_right))
-            {
-                EntityManager.player.PosX += 4;
-            }
-
+            EntityManager.player.Move();
             Camera.UpdateCamera(graphics);
             base.Update(game_time);
         }
@@ -166,24 +148,24 @@ namespace WalkAround
             return control_map[action].Any(x => Keyboard.GetState().IsKeyDown(x));
         }
 
-        public static List<GameObject> FindOverlapsFromList(GameObject object_1, IEnumerable<GameObject> the_list)
+        public static List<GameObject> FindOverlaps(GameObject object_1, IEnumerable<GameObject> the_list, int x=0, int y=0)
         {
             List<GameObject> current_objects = new List<GameObject>();
             foreach (GameObject object_2 in the_list)
             {
-                if (DoObjectsOverlap(object_1, object_2))
+                if (DoObjectsOverlap(object_1, object_2, x, y))
                 {
                     current_objects.Add(object_2);
                 }
             }
-
+        
             return current_objects;
         }
 
-        public static bool DoObjectsOverlap(GameObject object_1, GameObject object_2)
+        public static bool DoObjectsOverlap(GameObject object_1, GameObject object_2, int x = 0, int y = 0)
         {
-            Vector2 tl1 = new Vector2(object_1.PosX, object_1.PosY);
-            Vector2 br1 = new Vector2(object_1.PosX + object_1.Width, object_1.PosY + object_1.Height);
+            Vector2 tl1 = new Vector2(object_1.PosX + x, object_1.PosY + y);
+            Vector2 br1 = new Vector2(object_1.PosX + object_1.Width + x, object_1.PosY + object_1.Height + y);
 
             Vector2 tl2 = new Vector2(object_2.PosX, object_2.PosY);
             Vector2 br2 = new Vector2(object_2.PosX + object_2.Width, object_2.PosY + object_2.Height);
