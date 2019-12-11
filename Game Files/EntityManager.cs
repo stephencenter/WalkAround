@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using System.Linq;
 
 namespace WalkAround
@@ -63,5 +64,11 @@ namespace WalkAround
                 FacingDirection = Logic.Direction.right;
             }
         }
+    }
+
+    public class NPC
+    {
+        public Vector2 HomePoint { get; set; }
+        public bool Wanderous { get; set; }
     }
 }

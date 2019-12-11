@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WalkAround
 {
@@ -21,9 +16,8 @@ namespace WalkAround
 
         public static void UpdateCamera(GraphicsDeviceManager graphics)
         {
-            x_offset = -EntityManager.player.PosX + graphics.PreferredBackBufferWidth/2;
-            y_offset = -EntityManager.player.PosY + graphics.PreferredBackBufferHeight/2;
+            x_offset = (int)(-EntityManager.player.PosX + (0.5*graphics.PreferredBackBufferWidth/WalkAround.scaling_factor));
+            y_offset = (int)(-EntityManager.player.PosY + (0.5*graphics.PreferredBackBufferHeight/WalkAround.scaling_factor));
         }
-
     }
 }

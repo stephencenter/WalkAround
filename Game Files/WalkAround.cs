@@ -129,7 +129,7 @@ namespace WalkAround
             { Actions.move_up, new List<Keys>() { Keys.W, Keys.Up } },
             { Actions.move_down, new List<Keys>() { Keys.S, Keys.Down } },
             { Actions.move_left, new List<Keys>() { Keys.A, Keys.Left } },
-            { Actions.move_right, new List<Keys>() { Keys.D, Keys.Right } },
+            { Actions.move_right, new List<Keys>() { Keys.D, Keys.Right } }
         };
 
         // List of valid directions entities can face or move in
