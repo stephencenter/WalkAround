@@ -4,6 +4,8 @@ namespace WalkAround
 {
     public static class TileBuilder
     {
+        // A list of symbols usable when creating textmaps. These symbols each correspond
+        // to a specific kind of tile.
         private static readonly Dictionary<char, TileInfo> TileCatalog = new Dictionary<char, TileInfo>()
         {
             { ' ', new TileInfo(WalkAround.tile_size, WalkAround.tile_size, "Sprites/Tiles/void", true) },

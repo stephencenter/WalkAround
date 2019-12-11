@@ -14,18 +14,22 @@ namespace WalkAround
             return tile_list;
         }
 
+        // Get a list of textmaps for the area, convert all the textmaps into tiles,
+        // then place the tiles into a list so they can be displayed on the screen
         public static void CreateGameMap(ContentManager content)
         {
+            // This is a list of file names, each file is a separate layer of the gamemap.
+            // The layers are displayed alphabetically, so layer_2 is displayed above layer_1
+            var files = Directory.GetFiles($"Maps/{WalkAround.current_map}", "*.txt", SearchOption.TopDirectoryOnly).ToList();
+            files.Sort();
 
-            List<string> files = Directory.GetFiles($"Maps/{WalkAround.current_map}", "*.txt", SearchOption.TopDirectoryOnly).ToList();
             List<List<string>> layers = new List<List<string>>();
-            layers.Sort();
-
             foreach (string file in files)
             {
                 layers.Add(File.ReadAllText(file).Split('\n').ToList());
             }
 
+            // Create all the tiles and place them in the proper location
             foreach (List<string> layer in layers)
             {
                 int x = 0;
@@ -51,7 +55,6 @@ namespace WalkAround
     public class Tile : GameObject
     {
         public bool Traversable;
-        public bool IsRecoveryPoint;
 
         public Tile(int pos_x, int pos_y, int width, int height, string sprite, bool traversable, ContentManager content) : base(pos_x, pos_y, width, height, sprite, content)
         {

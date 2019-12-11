@@ -10,9 +10,8 @@ namespace WalkAround
 {
     public class WalkAround : Game
     {
-        private GraphicsDeviceManager graphics;
+        private readonly GraphicsDeviceManager graphics;
         private SpriteBatch sprite_batch;
-        private SpriteBatch font_batch;
 
         // Global Variables
         public static float scaling_factor = 1.0f;
@@ -45,7 +44,6 @@ namespace WalkAround
         protected override void LoadContent()
         {
             sprite_batch = new SpriteBatch(GraphicsDevice);
-            font_batch = new SpriteBatch(GraphicsDevice);
             EntityManager.CreatePlayer(Content);
             TileManager.CreateGameMap(Content);
         }
@@ -73,18 +71,20 @@ namespace WalkAround
         {
             GraphicsDevice.Clear(Color.Black);
             sprite_batch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scaling_factor));
-            
+
+            // Draw all the tiles to the scree
             foreach (Tile tile in TileManager.GetTileList())
             {
+                // We draw the tiles with an offset so that the camera is always centered on the player
+                // regardless of where they are in space
                 sprite_batch.Draw(tile.Sprite, new Vector2(tile.PosX + Camera.x_offset, tile.PosY + Camera.y_offset), Color.White);
             }
 
+            // Draw the player to the screen, we draw it with the camera offset for the same reason as the tiles
             Player player = EntityManager.player;
-
             sprite_batch.Draw(player.Sprite, new Vector2(player.PosX + Camera.x_offset, player.PosY + Camera.y_offset), Color.White);
 
             sprite_batch.End();
-
             base.Draw(game_time);
         }
     }
@@ -102,6 +102,7 @@ namespace WalkAround
         // The GameObject's currently-loaded sprite
         public Texture2D Sprite;
 
+        // Constructor
         protected GameObject(int pos_x, int pos_y, int width, int height, string sprite, ContentManager content)
         {
             PosX = pos_x;
@@ -141,13 +142,14 @@ namespace WalkAround
             right
         }
 
+        // Check to see if a specific button is pressed
         public static bool IsButtonPressed(Actions action)
         {
-            // Check to see if a specific button is pressed
             return control_map[action].Any(x => Keyboard.GetState().IsKeyDown(x));
         }
 
-        public static List<GameObject> FindOverlaps(GameObject object_1, IEnumerable<GameObject> the_list, int x=0, int y=0)
+        // Returns a list of objects from a list that overlap with a specific object
+        public static List<GameObject> FindOverlaps(GameObject object_1, IEnumerable<GameObject> the_list, int x = 0, int y = 0)
         {
             List<GameObject> current_objects = new List<GameObject>();
             foreach (GameObject object_2 in the_list)
@@ -157,10 +159,12 @@ namespace WalkAround
                     current_objects.Add(object_2);
                 }
             }
-        
+
             return current_objects;
         }
 
+        // Determines whether 2 objects overlap. 
+        // 'x' and 'y' refer to whether object_1 and object_2 will overlap if object_1 is moved 'x' units right and 'y' units down
         public static bool DoObjectsOverlap(GameObject object_1, GameObject object_2, int x = 0, int y = 0)
         {
             Vector2 tl1 = new Vector2(object_1.PosX + x, object_1.PosY + y);

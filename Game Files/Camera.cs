@@ -14,6 +14,7 @@ namespace WalkAround
             free_roam
         }
 
+        // Update the camera offsets so the camera is centered on the player
         public static void UpdateCamera(GraphicsDeviceManager graphics)
         {
             x_offset = (int)(-EntityManager.player.PosX + (0.5*graphics.PreferredBackBufferWidth/WalkAround.scaling_factor));

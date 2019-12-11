@@ -20,13 +20,17 @@ namespace WalkAround
         public Logic.Direction FacingDirection { get; set; }
 
         // Constructor
-        protected Entity(int pos_x, int pos_y, int width, int height, string sprite, int speed, ContentManager content) : base(pos_x, pos_y, width, height, sprite, content)
+        protected Entity(int pos_x, int pos_y, int width, int height, string sprite, int speed, ContentManager content)
+            : base(pos_x, pos_y, width, height, sprite, content)
         {
             MoveSpeed = speed;
         }
 
+        // Called once per frame, tells the entity how to move
         public abstract void Move();
 
+        // Returns true if moving to the point (PosX + x_delta, PosY + y_delta)
+        // would put the entity inside a non-traversable collision box
         public bool PredictCollision(int x_delta, int y_delta)
         {
             return Logic.FindOverlaps(this, TileManager.GetTileList(), x_delta, y_delta).Select(x => x as Tile).Any(x => !x.Traversable);
@@ -36,7 +40,8 @@ namespace WalkAround
     public class Player : Entity
     {
         // Constructor
-        public Player(int pos_x, int pos_y, int width, int height, string sprite, int speed, ContentManager content) : base(pos_x, pos_y, width, height, sprite, speed, content) { }
+        public Player(int pos_x, int pos_y, int width, int height, string sprite, int speed, ContentManager content)
+            : base(pos_x, pos_y, width, height, sprite, speed, content) { }
 
         public override void Move()
         {
