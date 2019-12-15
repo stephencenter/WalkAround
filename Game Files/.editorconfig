@@ -2,3 +2,6 @@
 
 # RCS1129: Remove redundant field initalization.
 dotnet_diagnostic.RCS1129.severity = none
+
+# RCS1036: Remove redundant empty line.
+dotnet_diagnostic.RCS1036.severity = none

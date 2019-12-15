@@ -1,0 +1,19 @@
+These symbols and their layers are recommendations to simplify things, they are not enforced.
+The GameObjects these symbols correspond to are map-specific, the same symbol does not always mean
+the same thing on every map (there just aren't enough symbols for that)
+
+Tiles - Layer 1 and 2
+    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+    a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+
+Warps - Layer 2
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    
+NPCs - Layer 2
+    α, β, γ, δ, ε, ζ, η, θ, ι, κ, λ, μ, ν, ξ, π, σ, τ, υ, φ, χ, ψ, ω
+
+Units - Layer 2
+    !, @, #, $, %, ^, &, *, (, ), [, ], |, ?, <, >, =, -, _, +
+    
+Other Objects - Layer 2
+    あ, い, う, え, お, か, き, く, け, こ, た, ち, つ, て, と, な, に, ぬ, ね, の, は, ひ, ふ, へ, ほ, ま, み, む, め, も, ら, り, る, れ, ろ

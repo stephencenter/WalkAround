@@ -25,6 +25,7 @@ namespace WalkAround
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Logic.UpdateContent(Content);
         }
 
         protected override void Initialize()
@@ -44,8 +45,8 @@ namespace WalkAround
         protected override void LoadContent()
         {
             sprite_batch = new SpriteBatch(GraphicsDevice);
-            EntityManager.CreatePlayer(Content);
-            TileManager.CreateGameMap(Content);
+            UnitManager.CreatePlayer();
+            MapBuilder.CreateGameMap();
         }
 
         protected override void UnloadContent()
@@ -61,8 +62,9 @@ namespace WalkAround
             float sf1 = (float)(graphics.PreferredBackBufferWidth) / (tile_size * screen_width);
             float sf2 = (float)(graphics.PreferredBackBufferHeight) / (tile_size * screen_height);
             scaling_factor = Math.Min(sf1, sf2);
+            Logic.UpdateContent(Content);
 
-            EntityManager.player.Move();
+            UnitManager.player.Move();
             Camera.UpdateCamera(graphics);
             base.Update(game_time);
         }
@@ -72,7 +74,7 @@ namespace WalkAround
             GraphicsDevice.Clear(Color.Black);
             sprite_batch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scaling_factor));
 
-            // Draw all the tiles to the scree
+            // Draw all the tiles to the screen
             foreach (Tile tile in TileManager.GetTileList())
             {
                 // We draw the tiles with an offset so that the camera is always centered on the player
@@ -80,8 +82,24 @@ namespace WalkAround
                 sprite_batch.Draw(tile.Sprite, new Vector2(tile.PosX + Camera.x_offset, tile.PosY + Camera.y_offset), Color.White);
             }
 
+            // Then, draw the entities to the screen
+            foreach (Entity entity in EntityManager.GetEntityList())
+            {
+                // We draw the tiles with an offset so that the camera is always centered on the player
+                // regardless of where they are in space
+                sprite_batch.Draw(entity.Sprite, new Vector2(entity.PosX + Camera.x_offset, entity.PosY + Camera.y_offset), Color.White);
+            }
+
+            // Finally, draw the units to the screen
+            foreach (Unit unit in UnitManager.GetUnitList())
+            {
+                // We draw the tiles with an offset so that the camera is always centered on the player
+                // regardless of where they are in space
+                sprite_batch.Draw(unit.Sprite, new Vector2(unit.PosX + Camera.x_offset, unit.PosY + Camera.y_offset), Color.White);
+            }
+
             // Draw the player to the screen, we draw it with the camera offset for the same reason as the tiles
-            Player player = EntityManager.player;
+            Player player = UnitManager.player;
             sprite_batch.Draw(player.Sprite, new Vector2(player.PosX + Camera.x_offset, player.PosY + Camera.y_offset), Color.White);
 
             sprite_batch.End();
@@ -92,36 +110,41 @@ namespace WalkAround
     public abstract class GameObject
     {
         // The position of the top-left corner in the game-world
-        public int PosX;
-        public int PosY;
+        public int PosX { get; set; }
+        public int PosY { get; set; }
 
         // The width and height of the objects collision box (independent of actual sprite size)
-        public int Width;
-        public int Height;
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         // The GameObject's currently-loaded sprite
-        public Texture2D Sprite;
+        public string SpriteLoc { get; set; }
+        public Texture2D Sprite { get; set; }
 
         // Constructor
-        protected GameObject(int pos_x, int pos_y, int width, int height, string sprite, ContentManager content)
+        protected GameObject(int pos_x, int pos_y, int width, int height, string sprite)
         {
             PosX = pos_x;
             PosY = pos_y;
             Width = width;
             Height = height;
-            Sprite = content.Load<Texture2D>(sprite);
+            SpriteLoc = sprite;
+            Sprite = Logic.Content.Load<Texture2D>(sprite);
         }
     }
 
     public static class Logic
     {
+        public static ContentManager Content;
+
         // List of valid actions, these can have multiple keys assigned to them
         public enum Actions
         {
             move_up,
             move_down,
             move_left,
-            move_right
+            move_right,
+            interact
         }
 
         // Dictionary that determines which keys correspond to which actions
@@ -130,7 +153,8 @@ namespace WalkAround
             { Actions.move_up, new List<Keys>() { Keys.W, Keys.Up } },
             { Actions.move_down, new List<Keys>() { Keys.S, Keys.Down } },
             { Actions.move_left, new List<Keys>() { Keys.A, Keys.Left } },
-            { Actions.move_right, new List<Keys>() { Keys.D, Keys.Right } }
+            { Actions.move_right, new List<Keys>() { Keys.D, Keys.Right } },
+            { Actions.interact, new List<Keys>() { Keys.K, Keys.Z } }
         };
 
         // List of valid directions entities can face or move in
@@ -174,6 +198,11 @@ namespace WalkAround
             Vector2 br2 = new Vector2(object_2.PosX + object_2.Width, object_2.PosY + object_2.Height);
 
             return tl1.X < br2.X && tl2.X < br1.X && tl1.Y < br2.Y && tl2.Y < br1.Y;
+        }
+
+        public static void UpdateContent(ContentManager content)
+        {
+            Content = content;
         }
     }
 }
