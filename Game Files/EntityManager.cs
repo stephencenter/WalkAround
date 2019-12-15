@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace WalkAround
 {
@@ -24,6 +23,8 @@ namespace WalkAround
     // This includes NPCs, levers, pushable blocks, etc.
     public abstract class Entity : GameObject
     {
+        public abstract void DoInteraction();
+
         protected Entity(int pos_x, int pos_y, int width, int height, string sprite) :
             base(pos_x, pos_y, width, height, sprite)
         {
@@ -33,6 +34,11 @@ namespace WalkAround
 
     public class NPC : Entity
     {
+        public override void DoInteraction()
+        {
+            System.Console.WriteLine("Talk talk talk!");
+        }
+
         // Constructor
         public NPC(int pos_x, int pos_y, int width, int height, string sprite) :
             base(pos_x, pos_y, width, height, sprite)

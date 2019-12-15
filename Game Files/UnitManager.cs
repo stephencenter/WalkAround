@@ -43,14 +43,12 @@ namespace WalkAround
             MoveSpeed = speed;
         }
 
-        // Called once per frame, tells the entity how to move
-        public abstract void Move();
-
         // Returns true if moving to the point (PosX + x_delta, PosY + y_delta)
         // would put the entity inside a non-traversable collision box
         public bool PredictCollision(int x_delta, int y_delta)
         {
-            return Logic.FindOverlaps(this, TileManager.GetTileList(), x_delta, y_delta).Select(x => x as Tile).Any(x => !x.Traversable);
+            var collisions = Logic.FindOverlaps(this, TileManager.GetTileList(), x_delta, y_delta).Select(x => x as Tile);
+            return collisions.Any(x => !x.Traversable);
         }
     }
 
@@ -60,7 +58,13 @@ namespace WalkAround
         public Player(int pos_x, int pos_y, int width, int height, string sprite, int speed) :
             base(pos_x, pos_y, width, height, sprite, speed) { }
 
-        public override void Move()
+        public void GetAction()
+        {
+            TryMove();
+            TryInteract();
+        }
+
+        public void TryMove()
         {
             if (Logic.IsButtonPressed(Logic.Actions.move_up) && !PredictCollision(0, -MoveSpeed))
             {
@@ -84,6 +88,44 @@ namespace WalkAround
             {
                 PosX += MoveSpeed;
                 FacingDirection = Logic.Direction.right;
+            }
+        }
+
+        public void TryInteract()
+        {
+            if (Logic.IsButtonPressed(Logic.Actions.interact))
+            {
+                System.Console.WriteLine("Interacting!");
+
+                int x_delta = 0;
+                int y_delta = 0;
+
+                if (FacingDirection == Logic.Direction.up)
+                {
+                    y_delta = -WalkAround.tile_size;
+                }
+
+                if (FacingDirection == Logic.Direction.down)
+                {
+                    y_delta = WalkAround.tile_size;
+                }
+
+                if (FacingDirection == Logic.Direction.left)
+                {
+                    x_delta = -WalkAround.tile_size;
+                }
+
+                if (FacingDirection == Logic.Direction.right)
+                {
+                    x_delta = WalkAround.tile_size;
+                }
+
+                List<Entity> entities = Logic.FindOverlaps(this, EntityManager.GetEntityList(), x_delta, y_delta);
+
+                if (entities.Count > 0)
+                {
+                    entities[0].DoInteraction();
+                }
             }
         }
     }

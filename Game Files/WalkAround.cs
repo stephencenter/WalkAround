@@ -62,9 +62,11 @@ namespace WalkAround
             float sf1 = (float)(graphics.PreferredBackBufferWidth) / (tile_size * screen_width);
             float sf2 = (float)(graphics.PreferredBackBufferHeight) / (tile_size * screen_height);
             scaling_factor = Math.Min(sf1, sf2);
+
+            // Update the value of Logic.Content so we can use that elsewhere (since Game.Content isn't a static property)
             Logic.UpdateContent(Content);
 
-            UnitManager.player.Move();
+            UnitManager.player.GetAction();
             Camera.UpdateCamera(graphics);
             base.Update(game_time);
         }
@@ -173,12 +175,12 @@ namespace WalkAround
         }
 
         // Returns a list of objects from a list that overlap with a specific object
-        public static List<GameObject> FindOverlaps(GameObject object_1, IEnumerable<GameObject> the_list, int x = 0, int y = 0)
+        public static List<T> FindOverlaps<T>(GameObject object_1, IEnumerable<T> the_list, int x = 0, int y = 0)
         {
-            List<GameObject> current_objects = new List<GameObject>();
-            foreach (GameObject object_2 in the_list)
+            List<T> current_objects = new List<T>();
+            foreach (T object_2 in the_list)
             {
-                if (DoObjectsOverlap(object_1, object_2, x, y))
+                if (DoObjectsOverlap(object_1, object_2 as GameObject, x, y))
                 {
                     current_objects.Add(object_2);
                 }

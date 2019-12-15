@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -18,7 +17,7 @@ namespace WalkAround
             { 'T', new Tile(0, 0, WalkAround.tile_size/2, WalkAround.tile_size/2, "Sprites/Tiles/test_2", false) }
         };
 
-        private static readonly Dictionary<char, Entity> EntityCatalog = new Dictionary<char, Entity>()
+        private static readonly Dictionary<char, NPC> NPCCatalog = new Dictionary<char, NPC>()
         {
             { 'α', new NPC(0, 0, WalkAround.tile_size, WalkAround.tile_size, "Sprites/Entities/npc") },
             { 'β', new NPC(0, 0, WalkAround.tile_size, WalkAround.tile_size, "Sprites/Entities/npc") }
@@ -31,9 +30,9 @@ namespace WalkAround
             return TileCatalog[symbol];
         }
 
-        public static Entity GetEntityInfo(char symbol)
+        public static NPC GetNPCInfo(char symbol)
         {
-            return EntityCatalog[symbol];
+            return NPCCatalog[symbol];
         }
 
         public static Unit GetUnitInfo(char symbol)
@@ -76,9 +75,9 @@ namespace WalkAround
                             tile_list.Add(new Tile(x, y, tl.Width, tl.Height, tl.SpriteLoc, tl.Traversable));
                         }
 
-                        else if (EntityCatalog.ContainsKey(symbol))
+                        else if (NPCCatalog.ContainsKey(symbol))
                         {
-                            var tl = GetEntityInfo(symbol);
+                            var tl = GetNPCInfo(symbol);
                             entity_list.Add(new NPC(x, y, tl.Width, tl.Height, tl.SpriteLoc));
                         }
 
