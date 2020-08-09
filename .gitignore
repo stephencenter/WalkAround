@@ -1,7 +1,9 @@
-/.vs/
-/Game Files/bin/
-/Game Files/obj/
-/Game Files/Content/bin/
-/Game Files/Content/obj/
-/Game Files/packages/
-/Game Files/.vs/
+.config/
+Content/bin/
+Content/obj/
+Icon.bmp
+Icon.Ico
+obj/
+bin/
+.vs/
+packages/
